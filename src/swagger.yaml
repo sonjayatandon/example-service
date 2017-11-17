@@ -1,0 +1,85 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: "Products API"
+host: "127.0.0.1:5000"
+basePath: "/"
+schemes:
+- "http"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /products:
+    get:
+      operationId: "getProducts"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "products"
+    post:
+      description: "Create a new product"
+      operationId: "createProduct"
+      parameters:
+      - name: "token"
+        in: "header"
+        description: "The authorization token defining access permissions. Permission\
+          \ is\ndenied unless this header contains a signed capability object giving\n\
+          the bearer access to the requested operation.\n"
+        required: false
+        type: "string"
+        pattern: "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+      - in: "body"
+        name: "body"
+        description: "The product details"
+        required: true
+        schema:
+          $ref: "#/definitions/Product"
+      responses:
+        201:
+          description: "Success, creation complete"
+          schema:
+            $ref: "#/definitions/Product"
+        202:
+          description: "Success, creation pending"
+          schema:
+            $ref: "#/definitions/Product"
+        400:
+          description: "Unable to create product"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        403:
+          description: "The capability token provided does not grant access to the\
+            \ requested\nfunctionality.\n"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-swagger-router-controller: "products"
+  /swagger:
+    x-swagger-pipe: "swagger_raw"
+definitions:
+  ErrorResponse:
+    required:
+    - "message"
+    - "code"
+    properties:
+      message:
+        type: "string"
+      code:
+        type: "integer"
+  inline_response_200:
+    properties:
+      message:
+        type: "string"
+  Product:
+    required:
+    - "productname"
+    properties:
+      productname:
+        type: "string"

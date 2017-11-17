@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+
+  products-service:
+    container_name: products-service
+    build:
+      context: .
+      args:
+        - NODE_ENV=dev
+    ports:
+      - '5000:5000'
+    volumes:
+      - './src:/usr/src/app/src'
+      - './test:/usr/src/app/test'
+    depends_on:
+      - products-db
+    links:
+      - products-db
+
+  products-db:
+    container_name: products-db
+    build: ./products-db/
+
+networks:
+  default:
+    external:
+      name: discovery
