@@ -17,10 +17,14 @@ services:
       - products-db
     links:
       - products-db
+    entrypoint:
+      [src/startup.sh]
 
   products-db:
     container_name: products-db
     build: ./products-db/
+    volumes:
+      - ./db:/data/db
 
 networks:
   default:
