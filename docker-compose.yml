@@ -22,7 +22,3 @@ services:
     container_name: products-db
     build: ./products-db/
 
-networks:
-  default:
-    external:
-      name: discovery
